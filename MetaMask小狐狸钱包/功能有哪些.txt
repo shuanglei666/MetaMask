@@ -1,0 +1,6 @@
+    <button @click="get">连接钱包</button>
+    <button @click="get1">查ETH余额</button>
+    <button @click="get11">查2ETH余额</button>
+    <button @click="get2">ETH转账</button>
+    <button @click="get3">切换用户</button>
+    <button @click="get4">切换网络</button>

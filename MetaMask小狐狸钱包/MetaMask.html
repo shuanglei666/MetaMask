@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="renderer" content="webkit" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+</head>
+
+<body>
+	<button id="btn-wallet" onclick="linkWallet()">连接wallet</button>
+	<button onclick="getAccount()">获取account</button>
+	<input id="input-account" readonly="readonly" type="text" value="" />
+</body>
+<!-- <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js" type="text/javascript" charset="utf-8"></script> -->
+<script src="https://cdn.bootcdn.net/ajax/libs/web3/1.7.0/web3.min.js"></script>
+</script>
+<script type="text/javascript">
+	var web3Provider;
+	var web3js;
+
+	function linkWallet() {
+		if (window.ethereum) {
+			web3Provider = window.ethereum;
+			// 新版需要请求用户授权
+			try {
+				window.ethereum.enable();
+			} catch (error) {
+				alert("用户取消授权");
+				return;
+			}
+		} else if (window.web3) {
+			// MetaMask Legacy dapp browsers...
+			web3Provider = window.web3.currentProvider;
+			console.log("window.web3.currentProvider:");
+			console.log(window.web3.currentProvider);
+		} else {
+			web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');
+			console.log("https://http-testnet.hecochain.com");
+		}
+
+		web3js = new Web3(web3Provider);
+
+		document.getElementById("btn-wallet").innerText = "重新连接";
+	}
+
+	function getAccount() {
+		if (!web3js) {
+			document.getElementById("input-account").value = "请先连接 wallet";
+			return;
+		}
+		web3js.eth.getAccounts(function (error, result) {
+			if (!error) {
+				document.getElementById("input-account").value = result;
+			} else {
+				document.getElementById("input-account").value = "获取地址失败";
+			}
+		});
+	}
+</script>
+
+</html>
+
+
+<!-- // https://www.cnblogs.com/wanghui-garcia/p/9682850.html
+// https://blog.csdn.net/qq_42740797/article/details/122081747?utm_medium=distribute.pc_aggpage_search_result.none-task-blog-2~aggregatepage~first_rank_ecpm_v1~rank_v31_ecpm-2-122081747.pc_agg_new_rank&utm_term=%E6%80%8E%E4%B9%88%E8%BF%9E%E6%8E%A5MetaMask&spm=1000.2123.3001.4430
+// https://blog.csdn.net/cjy_win/article/details/117248919?spm=1001.2101.3001.6650.1&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1.pc_relevant_aa&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1.pc_relevant_aa&utm_relevant_index=2
+// https://blog.csdn.net/weixin_45604639/article/details/115866521 -->
